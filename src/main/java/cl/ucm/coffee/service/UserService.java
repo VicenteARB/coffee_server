@@ -32,10 +32,8 @@ public class UserService implements IUserService{
 
     @Transactional
     public UserEntity registerUser(UserEntity userEntity) {
-        // Guardar el usuario
         UserEntity savedUser = userRepository.save(userEntity);
 
-        // Crear y guardar el rol
         UserRoleEntity userRole = new UserRoleEntity();
         userRole.setUsername(savedUser.getUsername());
         userRole.setRole("CUSTOMER");
