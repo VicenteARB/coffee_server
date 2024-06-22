@@ -13,12 +13,13 @@ public class JwtUtil {
     private static String SECRET_KEY = "Ucm-c0ff33";
     private static Algorithm ALGORITHM = Algorithm.HMAC256(SECRET_KEY);
 
-    public String create(String username) {
+    public String create(String username, String role) {
         return JWT.create()
                 .withSubject(username)
                 .withIssuer("ucm-coffee")
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(15)))
+                .withClaim("role", role)
                 .sign(ALGORITHM);
     }
 
@@ -38,5 +39,12 @@ public class JwtUtil {
                 .build()
                 .verify(jwt)
                 .getSubject();
+    }
+
+    public String getRole(String jwt) {
+        return JWT.require(ALGORITHM)
+                .build()
+                .verify(jwt)
+                .getClaim("role").asString();
     }
 }
