@@ -1,6 +1,5 @@
 package cl.ucm.coffee.web.controller;
 
-import cl.ucm.coffee.persitence.entity.CoffeeEntity;
 import cl.ucm.coffee.persitence.entity.UserEntity;
 import cl.ucm.coffee.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,9 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> registrar(@RequestBody UserEntity user){
-        return ResponseEntity.ok(userService.registerUser(user));
+    public ResponseEntity<UserEntity> registrar(@RequestBody UserEntity userEntity) {
+        UserEntity createdUser = userService.registerUser(userEntity);
+        return ResponseEntity.ok(createdUser);
     }
+
 }
