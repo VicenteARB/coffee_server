@@ -35,21 +35,18 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/coffee/list").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/coffee/save").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/user/list").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/user/save").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/coffee/save").permitAll()
 //                .requestMatchers(HttpMethod.POST,"/api/coffee/save").permitAll()
 //                .requestMatchers(HttpMethod.GET, "/api/coffee").hasAnyRole("ADMIN", "CUSTOMER")
 //                .requestMatchers(HttpMethod.GET, "/api/coffee/**").hasAnyRole("ADMIN", "CUSTOMER")
-//                .requestMatchers(HttpMethod.POST, "/api/coffee/**").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.GET, "/api/user/list").hasRole("ADMIN")
 //                .requestMatchers("/error").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
-
-
         return http.build();
     }
 
