@@ -35,8 +35,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/coffee/list").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/user/list").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/user/save").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/coffee/save").permitAll()
 //                .requestMatchers(HttpMethod.POST,"/api/coffee/save").permitAll()
 //                .requestMatchers(HttpMethod.GET, "/api/coffee").hasAnyRole("ADMIN", "CUSTOMER")

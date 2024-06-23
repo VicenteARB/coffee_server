@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements IUserService{
@@ -32,14 +33,70 @@ public class UserService implements IUserService{
 
     @Transactional
     public UserEntity registerUser(UserEntity userEntity) {
-        UserEntity savedUser = userRepository.save(userEntity);
+        try {
+            Optional<UserEntity> existingUser = userRepository.findById(userEntity.getUsername());
+            if (existingUser.isPresent()) {
+                throw new RuntimeException("Usuario existente.");
+            }
+            UserEntity savedUser = userRepository.save(userEntity);
 
-        UserRoleEntity userRole = new UserRoleEntity();
-        userRole.setUsername(savedUser.getUsername());
-        userRole.setRole("CUSTOMER");
-        userRole.setGrantedDate(LocalDateTime.now());
-        userRoleRepository.save(userRole);
+            UserRoleEntity userRole = new UserRoleEntity();
+            userRole.setUsername(savedUser.getUsername());
+            userRole.setRole("CUSTOMER");
+            userRole.setGrantedDate(LocalDateTime.now());
+            userRoleRepository.save(userRole);
 
-        return savedUser;
+            return savedUser;
+        } catch (RuntimeException e) {
+            System.err.println("Error registering user: " + e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Internal Server Error", e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public UserEntity updateUser(String username, UserEntity userEntity) {
+        try {
+            Optional<UserEntity> existingUserOptional = userRepository.findById(username);
+            if (existingUserOptional.isEmpty()) {
+                throw new RuntimeException("Usuario no encontrado.");
+            }
+
+            UserEntity existingUser = existingUserOptional.get();
+
+            if (userEntity.getPassword() != null) {
+                existingUser.setPassword(userEntity.getPassword());
+            }
+            if (userEntity.getEmail() != null) {
+                existingUser.setEmail(userEntity.getEmail());
+            }
+            if (userEntity.getLocked() != null) {
+                existingUser.setLocked(userEntity.getLocked());
+            }
+            if (userEntity.getDisabled() != null) {
+                existingUser.setDisabled(userEntity.getDisabled());
+            }
+
+            return userRepository.save(existingUser);
+        } catch (RuntimeException e) {
+            System.err.println("Error updating user: " + e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Internal Server Error", e);
+        }
+    }
+
+    @Override
+    public Optional<UserEntity> getUser(String username) {
+        try {
+            return userRepository.findById(username);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Internal Server Error", e);
+        }
     }
 }
