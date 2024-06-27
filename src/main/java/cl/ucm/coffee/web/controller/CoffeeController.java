@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/coffee")
@@ -36,17 +33,61 @@ public class CoffeeController {
             @RequestParam("name") String name,
             @RequestParam("description") String description,
             @RequestParam("price") int price,
-            @RequestParam("image64") MultipartFile imageFile) throws IOException {
+            @RequestParam("image64") String image64) throws IOException {
 
         CoffeeEntity coffeeEntity = new CoffeeEntity();
         coffeeEntity.setName(name);
         coffeeEntity.setDescription(description);
         coffeeEntity.setPrice(price);
+        coffeeEntity.setImage64(image64);
 
-        String base64Image = Base64.getEncoder().encodeToString(imageFile.getBytes());
-        coffeeEntity.setImage64(base64Image);
+//        String base64Image = Base64.getEncoder().encodeToString(imageFile.getBytes());
+//        coffeeEntity.setImage64(base64Image);
 
         CoffeeEntity createdCoffee = coffeeService.save(coffeeEntity);
         return ResponseEntity.ok(createdCoffee);
+    }
+
+    @GetMapping("/findByName")
+    public ResponseEntity<?> findByName(@RequestParam String name) {
+        try {
+            Optional<CoffeeEntity> coffee = coffeeService.findByName(name);
+            if (coffee.isPresent()) {
+                return ResponseEntity.ok(coffee.get());
+            } else {
+                return ResponseEntity.status(404).body("Coffee not found");
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> updateCoffee(@RequestBody CoffeeEntity coffeeEntity) {
+        try {
+            CoffeeEntity updatedCoffee = coffeeService.updateCoffee(coffeeEntity);
+            return ResponseEntity.ok(updatedCoffee);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
+    }
+
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<?> deleteCoffee(@PathVariable int id) {
+        try {
+            coffeeService.deleteCoffee(id);
+            return ResponseEntity.ok("Coffee deleted successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
     }
 }

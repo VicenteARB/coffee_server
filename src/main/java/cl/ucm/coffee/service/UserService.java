@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -31,13 +33,19 @@ public class UserService implements IUserService{
 //        return userRepository.save(userEntity);
 //    }
 
+    @Override
     @Transactional
     public UserEntity registerUser(UserEntity userEntity) {
         try {
-            Optional<UserEntity> existingUser = userRepository.findById(userEntity.getUsername());
-            if (existingUser.isPresent()) {
+            Map<String, String> errors = validateUser(userEntity);
+            if (!errors.isEmpty()) {
+                throw new RuntimeException(errors.toString());
+            }
+
+            if (userRepository.existsById(userEntity.getUsername())) {
                 throw new RuntimeException("Usuario existente.");
             }
+
             UserEntity savedUser = userRepository.save(userEntity);
 
             UserRoleEntity userRole = new UserRoleEntity();
@@ -98,5 +106,24 @@ public class UserService implements IUserService{
             e.printStackTrace();
             throw new RuntimeException("Internal Server Error", e);
         }
+    }
+
+    private Map<String, String> validateUser(UserEntity userEntity) {
+        Map<String, String> errors = new HashMap<>();
+
+        if (userEntity.getPassword() == null || userEntity.getPassword().isEmpty()) {
+            errors.put("password", "El campo Password no es valido.");
+        }
+        if (userEntity.getEmail() == null || userEntity.getEmail().isEmpty()) {
+            errors.put("email", "El campo email no es valido.");
+        }
+        if (userEntity.getLocked() == null) {
+            errors.put("locked", "El campo locked no es valido.");
+        }
+        if (userEntity.getDisabled() == null) {
+            errors.put("disabled", "El campo disable no es valido.");
+        }
+
+        return errors;
     }
 }
