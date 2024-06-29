@@ -24,8 +24,15 @@ public class CoffeeController {
     private IUserService userService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<CoffeeEntity>> getcoffes(){
-        return ResponseEntity.ok(coffeeService.getCoffeeList());
+    public ResponseEntity<?> getcoffes(){
+        try {
+            return ResponseEntity.ok(coffeeService.getCoffeeList());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
     }
 
     @PostMapping("/save")
@@ -58,10 +65,10 @@ public class CoffeeController {
         }
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<?> updateCoffee(@RequestBody CoffeeEntity coffeeEntity) {
+    @PostMapping("/update/{id}")
+    public ResponseEntity<?> updateCoffee(@PathVariable int id, @RequestBody CoffeeEntity coffeeEntity) {
         try {
-            CoffeeEntity updatedCoffee = coffeeService.updateCoffee(coffeeEntity);
+            CoffeeEntity updatedCoffee = coffeeService.updateCoffee(id, coffeeEntity);
             return ResponseEntity.ok(updatedCoffee);
         } catch (RuntimeException e) {
             return ResponseEntity.status(400).body(e.getMessage());

@@ -11,6 +11,6 @@ public interface ICoffeeService {
     CoffeeEntity save(CoffeeEntity coffeeEntity);
 
     Optional<CoffeeEntity> findByName(String name);
-    CoffeeEntity updateCoffee(CoffeeEntity coffeeEntity);
+    CoffeeEntity updateCoffee(int id, CoffeeEntity coffeeEntity);
     void deleteCoffee(int idCoffee);
 }

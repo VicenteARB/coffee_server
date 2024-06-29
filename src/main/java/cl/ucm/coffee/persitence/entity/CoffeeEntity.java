@@ -1,5 +1,7 @@
 package cl.ucm.coffee.persitence.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +34,7 @@ public class CoffeeEntity {
     private String image64;
 
     @OneToMany(mappedBy = "coffee", fetch = FetchType.EAGER)
+    @JsonManagedReference("coffee-testimonials")
     private List<TestimonialsEntity> testimonials;
 
 
