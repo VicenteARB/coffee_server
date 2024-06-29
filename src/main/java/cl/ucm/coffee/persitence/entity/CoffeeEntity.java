@@ -30,7 +30,7 @@ public class CoffeeEntity {
     private int price;
 
     @Lob
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "LONGBLOB")
     private String image64;
 
     @OneToMany(mappedBy = "coffee", fetch = FetchType.EAGER)
