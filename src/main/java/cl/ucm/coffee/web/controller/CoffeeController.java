@@ -29,23 +29,16 @@ public class CoffeeController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> setcoffe(
-            @RequestParam("name") String name,
-            @RequestParam("description") String description,
-            @RequestParam("price") int price,
-            @RequestParam("image64") String image64) throws IOException {
-
-        CoffeeEntity coffeeEntity = new CoffeeEntity();
-        coffeeEntity.setName(name);
-        coffeeEntity.setDescription(description);
-        coffeeEntity.setPrice(price);
-        coffeeEntity.setImage64(image64);
-
-//        String base64Image = Base64.getEncoder().encodeToString(imageFile.getBytes());
-//        coffeeEntity.setImage64(base64Image);
-
-        CoffeeEntity createdCoffee = coffeeService.save(coffeeEntity);
-        return ResponseEntity.ok(createdCoffee);
+    public ResponseEntity<?> setCoffee(@RequestBody CoffeeEntity coffeeEntity) {
+        try {
+            CoffeeEntity createdCoffee = coffeeService.save(coffeeEntity);
+            return ResponseEntity.ok(createdCoffee);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
     }
 
     @GetMapping("/findByName")
