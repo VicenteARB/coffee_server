@@ -15,12 +15,11 @@ public class TestimonialsService implements ITestimonialsService {
 
     @Override
     public TestimonialsEntity create(TestimonialsEntity testimonialsEntity) {
-        // Validación básica
         if (testimonialsEntity.getTestimonial() == null || testimonialsEntity.getTestimonial().isEmpty()) {
-            throw new IllegalArgumentException("Testimonial cannot be null or empty");
+            throw new IllegalArgumentException("Testimonial no puede estar vacio");
         }
         if (testimonialsEntity.getUsername() == null || testimonialsEntity.getUsername().isEmpty()) {
-            throw new IllegalArgumentException("Username cannot be null or empty");
+            throw new IllegalArgumentException("Username no puede estar vacio");
         }
         if (testimonialsEntity.getIdCoffee() <= 0) {
             throw new IllegalArgumentException("Invalid coffee ID");
