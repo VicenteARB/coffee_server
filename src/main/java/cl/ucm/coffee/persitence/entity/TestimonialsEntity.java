@@ -27,13 +27,13 @@ public class TestimonialsEntity {
     @Column(name="id_coffee", nullable = false, length = 30)
     private int idCoffee;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_coffee", referencedColumnName = "id_coffee", insertable = false, updatable = false)
     @JsonBackReference("coffee-testimonials")
     private CoffeeEntity coffee;
 
-    @ManyToOne
-    @JoinColumn(name = "username", referencedColumnName = "username", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "username", referencedColumnName = "username",  insertable = false, updatable = false, nullable = false)
     @JsonBackReference("user-testimonials")
     private UserEntity user;
 }

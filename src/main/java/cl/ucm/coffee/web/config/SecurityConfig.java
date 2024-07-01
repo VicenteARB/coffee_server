@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST,"/api/auth/update/{username}").hasAnyRole("ADMIN")
                 .requestMatchers(HttpMethod.GET,"/api/auth/get/{username}").hasAnyRole("ADMIN")
                 //Coffee
-                .requestMatchers(HttpMethod.GET,"/api/coffee/list").hasAnyRole("ADMIN", "CUSTOMER")
+                .requestMatchers(HttpMethod.GET,"/api/coffee/list").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/coffee/save").hasAnyRole("ADMIN")
                 .requestMatchers(HttpMethod.GET,"/api/coffee/findByName").hasAnyRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/coffee/update/{id}").hasAnyRole("ADMIN")

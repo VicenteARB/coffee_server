@@ -33,7 +33,7 @@ public class CoffeeEntity {
     @Column(columnDefinition = "LONGBLOB")
     private String image64;
 
-    @OneToMany(mappedBy = "coffee", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "coffee", fetch = FetchType.LAZY)
     @JsonManagedReference("coffee-testimonials")
     private List<TestimonialsEntity> testimonials;
 
